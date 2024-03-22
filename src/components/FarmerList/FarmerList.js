@@ -12,7 +12,6 @@ function FarmerList() {
   const [rowData, setRowData] = useState([]);                                  
   const [searchText, setSearchText] = useState("");
   const [modalIsOpen, setIsOpen] = React.useState(false);
-
   useEffect(() => {
     getAPICall(Url.getAllFarmer)                                                       
       .then((data) => {
