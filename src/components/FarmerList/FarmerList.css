@@ -1,5 +1,5 @@
 .modal {
-    width: 400px;
+    width: 800px;
     margin: 0 auto;
     background-color: #fff;
     box-shadow: 0px 0px 9px #00000029;
@@ -15,7 +15,36 @@
   .modal-header{
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
   }
 .modal-header h2{
     margin: 0px;
+  }
+  .input-wrap{
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    margin-bottom: 10px;
+  }
+  .farmer-detail{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .farmer-detail input{
+    height: 32px;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+    margin-top: 5px;
+  }
+  .modal-header button{
+    background: transparent;
+    border: none;
+    font-size: 22px;
+  }
+  .submitbtn-wrap{
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    
   }
