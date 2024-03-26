@@ -4,7 +4,7 @@ import Login from './components/loginpage/Login';
 import Home from './components/Home/Home'
 import FarmerList from './components/FarmerList/FarmerList';
 import DailyProductionList from './components/DailyProducationList/DailyProductionList';
-
+import Products from './components/Products/Products';
 function App() {
   return (
     <div className="App">
@@ -15,6 +15,7 @@ function App() {
            <Route path="Home" element={<Home />} />
            <Route path='FarmerList' element={<FarmerList />}/>
            <Route path='DailyProductionList' element={<DailyProductionList />}/>
+           <Route path='products' element={<Products />}/>
         </Routes>
 </BrowserRouter>
      </div>

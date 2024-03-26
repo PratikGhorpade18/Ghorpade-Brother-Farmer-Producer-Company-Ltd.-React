@@ -12,6 +12,9 @@ function Home() {
       },
       {
         heading:'Daily Production'
+      },
+      {
+        heading:'Products'
       }
     ]
   }
@@ -28,7 +31,11 @@ function Home() {
     }   else
     if(heading==='Daily Production'){
       navigate('/DailyProductionList');
-    }                                                                     
+    }  
+    
+    if(heading==='Products'){
+      navigate('/products');
+    }  
   };
 
   return (
