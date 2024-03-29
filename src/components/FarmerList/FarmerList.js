@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Url } from "../../constants/APIUrl";
-import { getAPICall } from "../../APIMethods/APIMethods";
-import { AgGridReact } from "ag-grid-react";
+import { getAPICall,putAPICall,deleteAPICall } from "../../APIMethods/APIMethods";
+ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { LuPencil } from "react-icons/lu";
@@ -14,11 +14,14 @@ function FarmerList() {
   const [searchText, setSearchText] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
   const [farmerId, setFarmerId] = useState("");
+  const [deletePopUp, setdeletePopUp] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+
   const [farmerDetails, setFarmerDetails] = useState({
     farmerId: "",
     fullName: "",
-    phoneNumber: "",
-    altPhoneNumber: "",
+    mobileNumber: "",
+    altMobileNumber: "",
     adharNumber: "",
     address: "",
   });
@@ -34,17 +37,19 @@ function FarmerList() {
   }, []);
 
   const handleEditFarmerList = (data) => {
+    setFarmerId(data.farmerId); // Set the farmerId for editing
     setFarmerDetails({
       ...farmerDetails,
       farmerId: data.farmerId,
       fullName: data.fullName,
-      phoneNumber: data.mobileNumber,
-      altPhoneNumber: data.altMobileNumber,
+      mobileNumber: data.mobileNumber,
+      altMobileNumber: data.altMobileNumber,
       adharNumber: data.adharNumber,
       address: data.address,
     });
     setIsOpen(true);
   }
+  
 
   const columnDefs = [
     { headerName: "Farmer Id", field: "farmerId" },
@@ -66,6 +71,9 @@ function FarmerList() {
             </button>
             <button
               className='DeleteBtn'
+              onClick={() => {
+                handleDeletePopUp(params.data.supBankId);
+              }}
              >
               <MdDeleteOutline />
             </button>
@@ -91,15 +99,61 @@ function FarmerList() {
       [field]: value,
     });
   };
+  const handleSubmitUpdate = () => {
+    debugger
+    console.log(farmerDetails)
+    setEditModal(true);
+    putAPICall(Url.updatefarmerId.replace('{farmerId}', farmerDetails?.farmerId), farmerDetails)
+      .then((resp) => {
+        console.log("edit", resp);
+        alert("Farmer Details Updated Successfully!");
+        setIsOpen(false); 
+      })
+      .catch((error) => {
+        console.error("Error updating farmer:", error);
+        alert("Failed to update farmer details.");
+      });
+  };
 
+  const deletePopUpClose = () => {
+    setdeletePopUp(false);
+  };
+  const handleDeletePopUp = (data) => {
+    setFarmerId(data);
+    setdeletePopUp(true);
+  };
+  const deleteFarmerOk = () => {
+    debugger
+    deleteAPICall(Url.deletefarmerId.replace("{farmerId}",  farmerDetails?.farmerId))
+      .then((res) => {
+        console.log(res);
+        if (res.success === true) {
+          alert("Bank Deleted Successfully")
+        } else {
+          alert(res.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+        alert("Something Went Wrong !");
+      });
+    setdeletePopUp(false);
+  };
+  const handleOpen = () => {
+    setEditModal(false);
+   };
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: 1500 }}>
+      <div className="btn-wrap">
+      <button onClick={handleOpen}>Add</button>
       <input
         type="text"
         placeholder="Search..."
         value={searchText}
         onChange={onSearchTextChange}
       />
+      </div>
+     
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
@@ -112,7 +166,7 @@ function FarmerList() {
         contentLabel="farmerList"
       >
         <div className="modal-header">
-          <h2>Edit Farmer Details</h2>
+          <h2>{editModal ? "Edit" : "Add"}Farmer Details</h2>
           <button onClick={closeModal}>X</button>
         </div>
         <form>
@@ -140,8 +194,8 @@ function FarmerList() {
               <input
                 type="text"
                 id="phoneNumber"
-                value={farmerDetails.phoneNumber}
-                onChange={(e) => handleInputChange(e.target, "phoneNumber")}
+                value={farmerDetails.mobileNumber}
+                onChange={(e) => handleInputChange(e.target, "mobileNumber")}
               />
             </div>
             <div className="input-wrap">
@@ -149,8 +203,8 @@ function FarmerList() {
               <input
                 type="text"
                 id="altPhoneNumber"
-                value={farmerDetails.altPhoneNumber}
-                onChange={(e) => handleInputChange(e.target, "altPhoneNumber")}
+                value={farmerDetails.altMobileNumber}
+                onChange={(e) => handleInputChange(e.target, "altMobileNumber")}
               />
             </div>
             <div className="input-wrap">
@@ -172,11 +226,45 @@ function FarmerList() {
               />
             </div>
             <div className="submitbtn-wrap">
-              <button>Submit</button>
+              {/* <button onClick={handleSubmitUpdate}>Submit</button> */}
+
+
+              <button
+                className='BankListAddbtn'
+                onClick={() => {
+                  {
+                    editModal ? handleSubmitUpdate() : handleSubmitUpdate();
+                  }
+                }}
+              >
+                {editModal ? "Update" : "Add"}
+              </button>
             </div>
           </div>
         </form>
       </Modal>
+
+
+      <Modal className='message-popup delete-popup'
+              isOpen={deletePopUp}
+              onRequestClose={deletePopUpClose}>
+              <div >
+                <p className='deletePopUpMessage'>Are you sure you want to delete this Bank?</p>
+                <div className="deletePopUpBtn">
+                  <button
+                    type='button'
+                    className='deletePopupOk deletePopupOk-sure'
+                    onClick={deleteFarmerOk}
+                  >
+                    Yes 
+                  </button>
+                  <button className="deleteNo"
+                    type='button'
+                    onClick={deletePopUpClose} >  No  </button>
+
+                </div>
+              </div>
+            </Modal>
     </div>
   );
 }

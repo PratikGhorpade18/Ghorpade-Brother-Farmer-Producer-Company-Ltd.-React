@@ -1,0 +1,47 @@
+.message-popup {
+    width: 25%;
+    height: 35%;
+    background-color: #fff;
+    box-shadow: 0px 0px 9px #00000029;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    border-top: 7px solid #14BC51;
+    border-radius: 7px;
+    padding: 1rem;
+  }
+  
+  .delete-popup {
+    width: 400px !important;
+    height: 100px !important;
+    border-left: 7px solid #E60023 !important;
+    border-top: none !important;
+  }
+  
+  .deletePopUpBtn button {
+    height: 1.8rem !important;
+    width: 80px !important;
+    margin-left: 10px;
+  }
+  
+  .delete-successfully {
+    border-top: 7px solid #E60023 !important;
+  
+  }
+  .delete-successfully button{
+    background-color: #E60023 !important;
+  }
+  
+  .deletePopUpMessage {
+    color: #252525;
+    text-align: center;
+    font-family: Inter-Medium;
+  }
+  
+  .bankLottiefile {
+    width: 30%;
+  }
+  

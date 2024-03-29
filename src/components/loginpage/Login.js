@@ -26,7 +26,7 @@ function Login() {
          .then((data) => { 
             console.log(data);
             if (data.jwtToken) {
-                //  localStorage.setItem('token', data.jwtToken);
+               sessionStorage.setItem('Authorize', data.jwtToken);
                   navigate("home"); 
             } else { 
                 alert("Invalid username or password");

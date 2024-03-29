@@ -48,3 +48,7 @@
     width: 100%;
     
   }
+  .btn-wrap{
+    display: flex;
+    justify-content: end;
+  }

@@ -2,7 +2,7 @@
 
   //Method for With Json Converted body
 export const postAPICall = (api, body) => {
-    debugger
+     
  return fetch(api, {
   method: "POST",
   headers: {
@@ -14,6 +14,7 @@ export const postAPICall = (api, body) => {
 };
 
 export const getAPICall = (api) => {
+   
   const Token = sessionStorage.getItem("Authorize");
   console.log(Token);
   return fetch(api, {
@@ -23,5 +24,33 @@ export const getAPICall = (api) => {
       Accept: "application/json",
       Authorization: "Bearer " + Token,
     },
+  }).then((respone) => respone.json());
+};
+
+export const putAPICall = (api, body) => {
+  debugger
+  const Token = sessionStorage.getItem("Authorize");
+  return fetch(api, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: "Bearer " + Token,
+     },
+    body: JSON.stringify(body),
+    // mode:"no-cors"
+  }).then((respone) => respone.json());
+};
+export const deleteAPICall = (api) => {
+  debugger
+  const Token = sessionStorage.getItem("Authorize");
+  return fetch(api, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: "Bearer " + Token,
+     },
+    // mode:"no-cors"
   }).then((respone) => respone.json());
 };
