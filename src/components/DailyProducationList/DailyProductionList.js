@@ -1,6 +1,5 @@
 import React from 'react'
-
-function DailyProductionList() {
+  function DailyProductionList() {
   return (
     <div>DailyProductionList</div>
   )

@@ -12,11 +12,25 @@ export const postAPICall = (api, body) => {
   body: JSON.stringify(body),
  }).then((respone) => respone.json());
 };
+//Method for Without Json Converted body
+export const postStringAPICall = (api, body) => {debugger
+  const Token = sessionStorage.getItem("Authorize");
+  return fetch(api, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: "Bearer " + Token,
+     },
+    body: JSON.stringify(body),
+    mode:"no-cors"
+  }).then((respone) => respone.json())
+  
+};
 
 export const getAPICall = (api) => {
-   
   const Token = sessionStorage.getItem("Authorize");
-  console.log(Token);
+
   return fetch(api, {
     method: "GET",
     headers: {
@@ -24,6 +38,7 @@ export const getAPICall = (api) => {
       Accept: "application/json",
       Authorization: "Bearer " + Token,
     },
+ 
   }).then((respone) => respone.json());
 };
 

@@ -5,6 +5,7 @@ import Home from './components/Home/Home'
 import FarmerList from './components/FarmerList/FarmerList';
 import DailyProductionList from './components/DailyProducationList/DailyProductionList';
 import Products from './components/Products/Products';
+import CustomerDetails from './components/CustomerDetails/CustomerDetails';
 function App() {
   return (
     <div className="App">
@@ -16,6 +17,7 @@ function App() {
            <Route path='FarmerList' element={<FarmerList />}/>
            <Route path='DailyProductionList' element={<DailyProductionList />}/>
            <Route path='products' element={<Products />}/>
+           <Route path='CustomerDetails' element={<CustomerDetails />}/>
         </Routes>
 </BrowserRouter>
      </div>

@@ -15,6 +15,9 @@ function Home() {
       },
       {
         heading:'Products'
+      },
+      {
+        heading:'Customer Details'
       }
     ]
   }
@@ -36,12 +39,14 @@ function Home() {
     if(heading==='Products'){
       navigate('/products');
     }  
+    if(heading==='Customer Details'){
+      navigate('/CustomerDetails');
+    }  
   };
 
   return (
     <div> 
      <div className='Card-wrap'>
-    
 {
   cards &&
   cards.map((item,index)=>(

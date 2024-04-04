@@ -18,6 +18,9 @@
     justify-content: space-between;
     margin-bottom: 10px;
   }
+  .ag-header-cell .ag-header-cell-text {
+    text-align: center !important;
+  }
 .modal-header h2{
     margin: 0px;
   }
@@ -27,12 +30,15 @@
     width: 45%;
     margin-bottom: 10px;
   }
-  .farmer-detail{
+  .ag-header-cell-center{
+    text-align: center !important;
+  }
+  .customerDetail{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  .farmer-detail input{
+  .customerDetail input{
     height: 32px;
     border-radius: 5px;
     border: 1px solid #aaa;
@@ -47,9 +53,15 @@
     display: flex;
     justify-content: end;
     width: 100%;
-    
-  }
+      }
   .btn-wrap{
     display: flex;
     justify-content: end;
+  }
+  .ag-header-cell-center .ag-header-cell-label {
+    justify-content: center;
+  }
+  .deletePopupOk {
+    width: 100px;
+    height: 2rem;
   }

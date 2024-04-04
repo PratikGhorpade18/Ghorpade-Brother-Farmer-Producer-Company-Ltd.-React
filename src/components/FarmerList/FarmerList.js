@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Url } from "../../constants/APIUrl";
-import { getAPICall,putAPICall,deleteAPICall } from "../../APIMethods/APIMethods";
+import { getAPICall,putAPICall,deleteAPICall,postStringAPICall } from "../../APIMethods/APIMethods";
  import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -10,21 +10,21 @@ import Modal from 'react-modal';
 import '../FarmerList/FarmerList.css';
 
 function FarmerList() {
-  const [rowData, setRowData] = useState([]);
+    const [rowData,  setRowData] =  useState([]);
   const [searchText, setSearchText] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
   const [farmerId, setFarmerId] = useState("");
   const [deletePopUp, setdeletePopUp] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-
+  const [editModal,setEditModal] = useState(false);
+                                   
   const [farmerDetails, setFarmerDetails] = useState({
-    farmerId: "",
+    farmerId: "", // Initialize with an empty string or a default value
     fullName: "",
     mobileNumber: "",
     altMobileNumber: "",
     adharNumber: "",
     address: "",
-  });
+  });           
 
   useEffect(() => {
     getAPICall(Url.getAllFarmer)
@@ -34,9 +34,11 @@ function FarmerList() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [modalIsOpen]);
 
   const handleEditFarmerList = (data) => {
+    debugger  
+    setEditModal(true);
     setFarmerId(data.farmerId); // Set the farmerId for editing
     setFarmerDetails({
       ...farmerDetails,
@@ -48,11 +50,12 @@ function FarmerList() {
       address: data.address,
     });
     setIsOpen(true);
-  }
-  
-
-  const columnDefs = [
-    { headerName: "Farmer Id", field: "farmerId" },
+  }           
+   const columnDefs = [
+    { headerName: "Farmer Id",
+    valueGetter: "Number(node.id)+1",
+    cellStyle: { textAlign: "center"} 
+      },
     { headerName: "Full Name", field: "fullName" },
     { headerName: "Address", field: "address" },
     { headerName: "Phone Number", field: "mobileNumber" },
@@ -62,22 +65,22 @@ function FarmerList() {
       headerName: "Action",
       cellRenderer: (params) => {
         return (
-          <div style={{ textAlign: "center" }}>
-            <button
-              className='EditBtn'
-              onClick={() => handleEditFarmerList(params.data)}
-            >
-              <LuPencil />
-            </button>
-            <button
-              className='DeleteBtn'
-              onClick={() => {
-                handleDeletePopUp(params.data.supBankId);
-              }}
-             >
-              <MdDeleteOutline />
-            </button>
-          </div>
+ <div style={{ textAlign: "center" }}>
+   <button                   
+     className='EditBtn'
+     onClick={() => handleEditFarmerList(params.data)}
+   >
+     <LuPencil />
+   </button>
+   <button
+     className='DeleteBtn'
+     onClick={() => {
+       handleDeletePopUp(params.data);
+     }}
+    >
+     <MdDeleteOutline />
+   </button>
+ </div>
         );
       },
       flex: 0.3,
@@ -92,6 +95,8 @@ function FarmerList() {
     setIsOpen(false);
   };
 
+ 
+
   const handleInputChange = (e, field) => {
     const value = e.value;
     setFarmerDetails({
@@ -99,36 +104,38 @@ function FarmerList() {
       [field]: value,
     });
   };
+  
   const handleSubmitUpdate = () => {
-    debugger
-    console.log(farmerDetails)
+    console.log(farmerDetails);
     setEditModal(true);
-    putAPICall(Url.updatefarmerId.replace('{farmerId}', farmerDetails?.farmerId), farmerDetails)
+    putAPICall(Url.updatefarmerId.replace('{farmerId}', farmerId), farmerDetails)
       .then((resp) => {
         console.log("edit", resp);
         alert("Farmer Details Updated Successfully!");
-        setIsOpen(false); 
+        setIsOpen(false);
       })
       .catch((error) => {
         console.error("Error updating farmer:", error);
         alert("Failed to update farmer details.");
       });
   };
+  
 
   const deletePopUpClose = () => {
     setdeletePopUp(false);
   };
   const handleDeletePopUp = (data) => {
-    setFarmerId(data);
+    debugger
+    setFarmerId(data.farmerId);
     setdeletePopUp(true);
   };
   const deleteFarmerOk = () => {
     debugger
-    deleteAPICall(Url.deletefarmerId.replace("{farmerId}",  farmerDetails?.farmerId))
+    deleteAPICall(Url.deletefarmerId.replace("{farmerId}", farmerId))
       .then((res) => {
         console.log(res);
         if (res.success === true) {
-          alert("Bank Deleted Successfully")
+          alert("Farmer Deleted Successfully");
         } else {
           alert(res.message);
         }
@@ -139,14 +146,39 @@ function FarmerList() {
       });
     setdeletePopUp(false);
   };
+  
   const handleOpen = () => {
+     
     setEditModal(false);
+    setIsOpen(true);
+
    };
+
+   const handleSubmit = async(e) => {
+    debugger
+    e.preventDefault(); // Prevent the default form submission behavior
+    const Token = sessionStorage.getItem("Authorize");
+  
+    const response = await fetch(Url.addFarmer, {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + Token,
+      },
+      body: JSON.stringify(farmerDetails),
+    });
+
+    const result = await response.json();
+    console.log("Success:", result);
+ 
+  };
+  
+  
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: 1500 }}>
       <div className="btn-wrap">
       <button onClick={handleOpen}>Add</button>
-      <input
+      <input  
         type="text"
         placeholder="Search..."
         value={searchText}
@@ -166,105 +198,105 @@ function FarmerList() {
         contentLabel="farmerList"
       >
         <div className="modal-header">
-          <h2>{editModal ? "Edit" : "Add"}Farmer Details</h2>
-          <button onClick={closeModal}>X</button>
+ <h2>{editModal ? "Edit" : "Add"} Farmer Details</h2>
+ <button onClick={closeModal}>X</button>
         </div>
         <form>
-          <div className="farmer-detail">
-            <div className="input-wrap">
-              <label htmlFor="farmerId">Farmer Id</label>
-              <input
-                type="text"
-                id="farmerId"
-                value={farmerDetails.farmerId}
-                onChange={(e) => handleInputChange(e.target, "farmerId")}
-              />
-            </div>
-            <div className="input-wrap">
-              <label htmlFor="fullName">Full Name</label>
-              <input
-                type="text"
-                id="fullName"
-                value={farmerDetails.fullName}
-                onChange={(e) => handleInputChange(e.target, "fullName")}
-              />
-            </div>
-            <div className="input-wrap">
-              <label htmlFor="phoneNumber">Phone Number</label>
-              <input
-                type="text"
-                id="phoneNumber"
-                value={farmerDetails.mobileNumber}
-                onChange={(e) => handleInputChange(e.target, "mobileNumber")}
-              />
-            </div>
-            <div className="input-wrap">
-              <label htmlFor="altPhoneNumber">Alt Phone Number</label>
-              <input
-                type="text"
-                id="altPhoneNumber"
-                value={farmerDetails.altMobileNumber}
-                onChange={(e) => handleInputChange(e.target, "altMobileNumber")}
-              />
-            </div>
-            <div className="input-wrap">
-              <label htmlFor="adharNumber">Adhar Number</label>
-              <input
-                type="text"
-                id="adharNumber"
-                value={farmerDetails.adharNumber}
-                onChange={(e) => handleInputChange(e.target, "adharNumber")}
-              />
-            </div>
-            <div className="input-wrap">
-              <label htmlFor="address">Address</label>
-              <input
-                type="text"
-                id="address"
-                value={farmerDetails.address}
-                onChange={(e) => handleInputChange(e.target, "address")}
-              />
-            </div>
-            <div className="submitbtn-wrap">
-              {/* <button onClick={handleSubmitUpdate}>Submit</button> */}
+ <div className="farmer-detail">
+   {/* <div className="input-wrap">
+     <label htmlFor="farmerId">Farmer Id</label>
+     <input
+       type="text"
+       id="farmerId"
+       value={farmerDetails.farmerId}
+       onChange={(e) => handleInputChange(e.target, "farmerId")}
+     />
+   </div> */}
+   <div className="input-wrap">
+     <label htmlFor="fullName">Full Name</label>
+     <input
+       type="text"
+       id="fullName"
+       value={farmerDetails.fullName}
+       onChange={(e) => handleInputChange(e.target, "fullName")}
+     />
+   </div>
+   <div className="input-wrap">
+     <label htmlFor="phoneNumber">Phone Number</label>
+     <input
+       type="text"
+       id="phoneNumber"
+       value={farmerDetails.mobileNumber}
+       onChange={(e) => handleInputChange(e.target, "mobileNumber")}
+     />
+   </div>
+   <div className="input-wrap">
+     <label htmlFor="altPhoneNumber">Alt Phone Number</label>
+     <input
+       type="text"
+       id="altPhoneNumber"
+       value={farmerDetails.altMobileNumber}
+       onChange={(e) => handleInputChange(e.target, "altMobileNumber")}
+     />
+   </div>
+   <div className="input-wrap">
+     <label htmlFor="adharNumber">Adhar Number</label>
+     <input
+       type="text"
+       id="adharNumber"
+       value={farmerDetails.adharNumber}
+       onChange={(e) => handleInputChange(e.target, "adharNumber")}
+     />
+   </div>
+   <div className="input-wrap">
+     <label htmlFor="address">Address</label>
+     <input
+       type="text"
+       id="address"
+       value={farmerDetails.address}
+       onChange={(e) => handleInputChange(e.target, "address")}
+     />
+   </div>
+   <div className="submitbtn-wrap">
+     {/* <button onClick={handleSubmitUpdate}>Submit</button> */}
 
 
-              <button
-                className='BankListAddbtn'
-                onClick={() => {
-                  {
-                    editModal ? handleSubmitUpdate() : handleSubmitUpdate();
-                  }
-                }}
-              >
-                {editModal ? "Update" : "Add"}
-              </button>
-            </div>
-          </div>
+     <button
+       className='BankListAddbtn'
+       onClick={(e) => {
+         {
+  editModal ? handleSubmitUpdate() : handleSubmit(e);
+         }
+       }}
+     >
+       {editModal ? "Update" : "Add"}
+     </button>
+   </div>
+ </div>
         </form>
       </Modal>
 
 
       <Modal className='message-popup delete-popup'
-              isOpen={deletePopUp}
-              onRequestClose={deletePopUpClose}>
-              <div >
-                <p className='deletePopUpMessage'>Are you sure you want to delete this Bank?</p>
-                <div className="deletePopUpBtn">
-                  <button
-                    type='button'
-                    className='deletePopupOk deletePopupOk-sure'
-                    onClick={deleteFarmerOk}
-                  >
-                    Yes 
-                  </button>
-                  <button className="deleteNo"
-                    type='button'
-                    onClick={deletePopUpClose} >  No  </button>
+     isOpen={deletePopUp}
+     onRequestClose={deletePopUpClose}>
+     <div >
+       <p className='deletePopUpMessage'>Are you sure you want to delete this Bank?</p>
+       <div className="deletePopUpBtn">
+         <button
+  type='button'
+  className='deletePopupOk deletePopupOk-sure'
+  onClick={deleteFarmerOk}
+         >
+  Yes 
+         </button>
+         <button className="deleteNo"
+  type='button'
+  onClick={deletePopUpClose} >  No  </button>
 
-                </div>
-              </div>
-            </Modal>
+       </div>
+     </div>
+   </Modal>
     </div>
   );
 }
