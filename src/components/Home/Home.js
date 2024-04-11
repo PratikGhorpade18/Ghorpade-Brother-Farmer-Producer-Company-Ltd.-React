@@ -17,6 +17,9 @@ function Home() {
         heading:'Products'
       },
       {
+        heading:'All Product'
+      },
+      {
         heading:'Customer Details'
       }
     ]
@@ -41,6 +44,9 @@ function Home() {
     }  
     if(heading==='Customer Details'){
       navigate('/CustomerDetails');
+    }  
+    if(heading==='All Product'){
+      navigate('/AllProduct');
     }  
   };
 

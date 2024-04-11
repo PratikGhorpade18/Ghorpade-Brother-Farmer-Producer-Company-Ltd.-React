@@ -101,7 +101,7 @@ function CustomerDetails() {
             .catch((error) => {
                 console.error("Error fetching data:", error);
             });
-    }, [modalIsOpen]);
+    }, [modalIsOpen,deletePopUp]);
 
     const handleSubmit = async(e) => {
       e.preventDefault();  
@@ -112,7 +112,7 @@ function CustomerDetails() {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + Token,
         },
-        body: JSON.stringify(customerDetails),
+        body: JSON.stringify(customerDetails),                                                                         
       });
       const result = await response.json();
       console.log("Success:", result);
@@ -295,8 +295,8 @@ setdeletePopUp(false);
               isOpen={deletePopUp}
               onRequestClose={deletePopUpClose}
             >
-              <div >
-                <p className='deletePopUpMessage'>Are you sure you want to delete this Bank?</p>
+              <div className="deletePopUpBtn-text" >
+                <h3 className='deletePopUpMessage'>Are you sure you want to delete this Bank?</h3>
                 <div className="deletePopUpBtn">
                   <button
                     type='button'
@@ -318,3 +318,49 @@ setdeletePopUp(false);
 }
 
 export default CustomerDetails;
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

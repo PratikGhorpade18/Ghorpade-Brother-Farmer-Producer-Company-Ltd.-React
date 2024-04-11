@@ -1,0 +1,18 @@
+.product-card{
+    border: 1px solid black;
+    height: 100%;
+    width: 30%;
+    margin: 10px;
+}
+.AllProduct{
+    padding: 20px;
+}
+.product-detail{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.AllProduct{
+    display: flex;
+    flex-wrap: wrap;
+ }

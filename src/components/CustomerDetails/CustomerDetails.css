@@ -61,7 +61,31 @@
   .ag-header-cell-center .ag-header-cell-label {
     justify-content: center;
   }
-  .deletePopupOk {
+  .deletePopupOk,.deleteNo{
     width: 100px;
     height: 2rem;
   }
+  .delete-popup{
+    border: 1px solid black;
+    width: 407px;
+    height: 206px;
+    margin: auto auto;
+    margin-top: 13%;
+  }
+  .deletePopUpMessage{
+    text-align: center;
+  }
+  .deletePopUpBtn{
+    justify-content: center;
+    display: flex;
+  }
+  .deletePopUpBtn button{
+    margin: 0px 5px;
+  }
+  .deletePopUpBtn-text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+  

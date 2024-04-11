@@ -10,7 +10,7 @@ export const Url ={
      addCustomer:"http://localhost:9092/Ghorpade-Brother/Customer/addCustomer",
      getcustomerId:"http://localhost:9092/Ghorpade-Brother/Customer/getCustomerById/{customerId}",
      updatecustomerId:"http://localhost:9092/Ghorpade-Brother/Customer/updateCustomer/{customerId}",
-     deleteCustomerId:"http://localhost:9092/Ghorpade-Brother/Customer/deleteCustomer/{customerId}"
-     
-}
+     deleteCustomerId:"http://localhost:9092/Ghorpade-Brother/Customer/deleteCustomer/{customerId}",
+     getAllProduct: "http://localhost:9092/Ghorpade-Brother/Product/getAllProduct"
+     }
 
